@@ -12,3 +12,190 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum SaleStatus {
+  OPEN
+  PAID
+  PARTIALLY_PAID
+  CANCELED
+}
+
+enum AccountStatus {
+  OPEN
+  PAID
+  PARTIALLY_PAID
+  CANCELED
+}
+
+enum PermissionCode {
+  MANAGE_USERS
+  VIEW_REPORTS
+  CREATE_SALE
+  UPDATE_SALE
+  VIEW_SALES
+  MANAGE_PRODUCTS
+  MANAGE_CLIENTS
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?
+  birthDate DateTime?
+  phone     String?
+  notes     String?
+
+  sales       Sale[]
+  receivables AccountReceivable[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Supplier {
+  id    String  @id @default(cuid())
+  name  String
+  phone String?
+  notes String?
+
+  products Product[]
+  payables AccountPayable[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id        String  @id @default(cuid())
+  name      String
+  code      String
+  barcode   String  @unique
+  cost      Int
+  salePrice Int
+  stock     Int
+  isActive  Boolean @default(true)
+  notes     String?
+
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  saleItems SaleItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Sale {
+  id            String     @id @default(cuid())
+  totalValue    Int
+  discount      Int        @default(0)
+  paymentMethod String?
+  installments  Int        @default(1)
+  isPaid        Boolean    @default(false)
+  status        SaleStatus
+  notes         String?
+
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  items       SaleItem[]
+  receivables AccountReceivable[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SaleItem {
+  id        String @id @default(cuid())
+  quantity  Int
+  unitPrice Int
+  discount  Int    @default(0)
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model AccountReceivable {
+  id             String        @id @default(cuid())
+  issueDate      DateTime
+  dueDate        DateTime
+  receivedDate   DateTime?
+  amount         Int
+  receivedAmount Int           @default(0)
+  status         AccountStatus
+  notes          String?
+
+  saleId String
+  sale   Sale   @relation(fields: [saleId], references: [id])
+
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AccountPayable {
+  id         String        @id @default(cuid())
+  reference  String?
+  issueDate  DateTime
+  dueDate    DateTime
+  paidDate   DateTime?
+  amount     Int
+  paidAmount Int           @default(0)
+  status     AccountStatus
+  notes      String?
+
+  supplierId String
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id       String  @id @default(cuid())
+  name     String
+  email    String  @unique
+  password String
+  isActive Boolean @default(true)
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+
+  users       User[]
+  permissions RolePermission[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id          String         @id @default(cuid())
+  code        PermissionCode @unique
+  description String?
+
+  roles RolePermission[]
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+}
