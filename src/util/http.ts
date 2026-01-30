@@ -1,6 +1,6 @@
-import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
-import { InputValidationError } from '@src/errors/input-validation.error';
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { InputValidationError } from "@src/errors/input-validation.error";
 
 export const sendError = (
   req: Request | Partial<Request>,
@@ -22,8 +22,11 @@ export const sendError = (
   } else {
     errorResponse = {
       code,
-      error: error instanceof Error ? error.message : (error ?? 'Erro interno no servidor'),
-      slug: error instanceof Error ? error.name : 'Unknown',
+      error:
+        error instanceof Error
+          ? error.message
+          : (error ?? "Erro interno no servidor"),
+      slug: error instanceof Error ? error.name : "Unknown",
     };
   }
 

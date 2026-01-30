@@ -1,15 +1,15 @@
-import { ZodError } from 'zod';
-import { BaseBusinessError } from './base-business.error';
+import { ZodError } from "zod";
+import { BaseBusinessError } from "./base-business.error";
 
-type ZodIssueType = ZodError['issues'][number];
+type ZodIssueType = ZodError["issues"][number];
 
 export class InputValidationError extends BaseBusinessError {
   public readonly issues: ZodIssueType[];
   public readonly formatted: Record<string, string[]>;
 
   constructor(error: ZodError) {
-    super('Um ou mais dados de entrada são inválidos.');
-    this.name = 'InputValidationError';
+    super("Um ou mais dados de entrada são inválidos.");
+    this.name = "InputValidationError";
     this.issues = error.issues;
     this.formatted = InputValidationError.formatIssues(error);
 
@@ -20,7 +20,7 @@ export class InputValidationError extends BaseBusinessError {
     const fieldErrors: Record<string, string[]> = {};
 
     for (const issue of error.issues) {
-      const key = issue.path.length > 0 ? String(issue.path[0]) : 'form';
+      const key = issue.path.length > 0 ? String(issue.path[0]) : "form";
       if (!fieldErrors[key]) fieldErrors[key] = [];
       fieldErrors[key].push(issue.message);
     }

@@ -1,20 +1,28 @@
-import { InputValidationError } from '@src/errors/input-validation.error';
-import { UnknownError } from '@src/errors/unknown.error';
-import { Either, wrong } from '@src/util/either';
-import { ZodType } from 'zod';
+import { InputValidationError } from "@src/errors/input-validation.error";
+import { UnknownError } from "@src/errors/unknown.error";
+import { Either, wrong } from "@src/util/either";
+import { ZodType } from "zod";
 
-export abstract class AbstractUseCase<Input, FailOutput extends Error, SuccessOutput> {
+export abstract class AbstractUseCase<
+  Input,
+  FailOutput extends Error,
+  SuccessOutput,
+> {
   constructor() {}
 
   protected abstract execute(
     input?: Input,
-  ): Promise<Either<FailOutput | InputValidationError | UnknownError, SuccessOutput>>;
+  ): Promise<
+    Either<FailOutput | InputValidationError | UnknownError, SuccessOutput>
+  >;
 
   protected abstract validationRules(): ZodType<Input>;
 
   public async run(
     input: Input,
-  ): Promise<Either<FailOutput | InputValidationError | UnknownError, SuccessOutput>> {
+  ): Promise<
+    Either<FailOutput | InputValidationError | UnknownError, SuccessOutput>
+  > {
     try {
       const schema = this.validationRules();
       const result = schema.safeParse(input);
