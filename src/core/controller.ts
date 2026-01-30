@@ -63,6 +63,7 @@ export abstract class AbstractController<L extends Error, A> {
   }
 
   private getErrorMap(): Map<
+  // eslint-disable-next-line
     Function,
     (req: Request, res: Response, result: L | Wrong<L, A>) => L
   > {
