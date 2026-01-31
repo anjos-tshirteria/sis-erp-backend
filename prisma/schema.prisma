@@ -159,7 +159,8 @@ model AccountPayable {
 model User {
   id       String  @id @default(uuid())
   name     String
-  email    String  @unique
+  username String  @unique
+  email    String?  @unique
   password String
   isActive Boolean @default(true)
 
