@@ -62,6 +62,11 @@ function lint {
   dc exec api pnpm lint "${@}"
 }
 
+function prisma {
+  # Run any command you want in the api container
+  dc exec api pnpm prisma "${@}"
+}
+
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 # Git commands
