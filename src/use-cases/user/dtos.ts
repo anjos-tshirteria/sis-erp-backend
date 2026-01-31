@@ -22,3 +22,5 @@ export const CreateUserSchema = z.object({
 
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 export type CreateUserOutput = OutputUser;
+
+export type UserControllerOutput = CreateUserOutput;

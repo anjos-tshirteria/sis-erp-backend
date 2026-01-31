@@ -31,12 +31,12 @@ export class CreateUserUseCase extends AbstractUseCase<
   ): Promise<Either<FailOutput, SuccessOutput>> {
     const existingUser = await prisma.user.findFirst({
       where: {
-        email: input.email,
+        OR: [{ username: input.username }, { email: input.email }],
       },
     });
 
     if (existingUser) {
-      return wrong(new AlreadyExistsError("usuário", "email"));
+      return wrong(new AlreadyExistsError("usuário", "username ou email"));
     }
 
     const role = await prisma.role.findFirst({ where: { id: input.roleId } });
