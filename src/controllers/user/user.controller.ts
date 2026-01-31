@@ -5,6 +5,8 @@ import { DefaultFailOutput } from "@src/types/errors";
 import { ListUsersInput, UserControllerOutput } from "@src/use-cases/user/dtos";
 import { ListUsersUseCase } from "@src/use-cases/user/list-users/list-users.usecase";
 import { GetUserUseCase } from "@src/use-cases/user/get-user/get-user.usecase";
+import { UpdateUserUseCase } from "@src/use-cases/user/update-user/update-user.usecase";
+import { DeleteUserUseCase } from "@src/use-cases/user/delete-user/delete-user.usecase";
 
 type FailOutput = DefaultFailOutput;
 type SuccessOutput = UserControllerOutput;
@@ -17,6 +19,8 @@ export class UserController extends AbstractController<
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly listUsersUseCase: ListUsersUseCase,
     private readonly getUserUseCase: GetUserUseCase,
+    private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {
     super();
   }
@@ -42,6 +46,25 @@ export class UserController extends AbstractController<
     const result = await this.getUserUseCase.run({ id: userId as string });
     return result.isRight()
       ? this.ok(req, res, result)
+      : this.handleError(req, res, result);
+  }
+
+  async update(req: Request, res: Response) {
+    const result = await this.updateUserUseCase.run({
+      id: req.params.id as string,
+      ...req.body,
+    });
+    return result.isRight()
+      ? this.ok(req, res, result)
+      : this.handleError(req, res, result);
+  }
+
+  async delete(req: Request, res: Response) {
+    const result = await this.deleteUserUseCase.run({
+      id: req.params.id as string,
+    });
+    return result.isRight()
+      ? this.noContent(req, res, result)
       : this.handleError(req, res, result);
   }
 }

@@ -43,7 +43,28 @@ export const GetUserSchema = z.object({
 export type GetUserInput = z.infer<typeof GetUserSchema>;
 export type GetUserOutput = OutputUser;
 
+export const UpdateUserSchema = z.object({
+  id: z.uuid("ID inválido"),
+  name: z.string().min(1).optional(),
+  username: z.string().min(1).optional(),
+  email: z.email().optional(),
+  active: z.boolean().optional(),
+  roleId: z.uuid().optional(),
+});
+
+export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
+export type UpdateUserOutput = OutputUser;
+
+export const DeleteUserSchema = z.object({
+  id: z.uuid("ID inválido"),
+});
+
+export type DeleteUserInput = z.infer<typeof DeleteUserSchema>;
+export type DeleteUserOutput = void;
+
 export type UserControllerOutput =
   | CreateUserOutput
   | ListUsersOutput
-  | GetUserOutput;
+  | GetUserOutput
+  | UpdateUserOutput
+  | DeleteUserOutput;

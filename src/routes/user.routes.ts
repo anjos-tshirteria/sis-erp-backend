@@ -7,6 +7,8 @@ const userController = makeUserController();
 userRouter
   .post("/", userController.create.bind(userController))
   .get("/", userController.list.bind(userController))
-  .get("/:id", userController.get.bind(userController));
+  .get("/:id", userController.get.bind(userController))
+  .put("/:id", userController.update.bind(userController))
+  .delete("/:id", userController.delete.bind(userController));
 
 export { userRouter };
