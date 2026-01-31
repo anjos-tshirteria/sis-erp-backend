@@ -4,6 +4,7 @@ import { CreateUserUseCase } from "@src/use-cases/user/create-user/create-user.u
 import { DefaultFailOutput } from "@src/types/errors";
 import { ListUsersInput, UserControllerOutput } from "@src/use-cases/user/dtos";
 import { ListUsersUseCase } from "@src/use-cases/user/list-users/list-users.usecase";
+import { GetUserUseCase } from "@src/use-cases/user/get-user/get-user.usecase";
 
 type FailOutput = DefaultFailOutput;
 type SuccessOutput = UserControllerOutput;
@@ -15,6 +16,7 @@ export class UserController extends AbstractController<
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly listUsersUseCase: ListUsersUseCase,
+    private readonly getUserUseCase: GetUserUseCase,
   ) {
     super();
   }
@@ -30,6 +32,14 @@ export class UserController extends AbstractController<
     const result = await this.listUsersUseCase.run(
       req.query as unknown as ListUsersInput,
     );
+    return result.isRight()
+      ? this.ok(req, res, result)
+      : this.handleError(req, res, result);
+  }
+
+  async get(req: Request, res: Response) {
+    const userId = req.params.id;
+    const result = await this.getUserUseCase.run({ id: userId as string });
     return result.isRight()
       ? this.ok(req, res, result)
       : this.handleError(req, res, result);

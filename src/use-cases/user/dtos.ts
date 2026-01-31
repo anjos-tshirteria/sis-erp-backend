@@ -36,4 +36,14 @@ export const ListUsersSchema = BasePaginatorSchema.extend({
 export type ListUsersInput = z.infer<typeof ListUsersSchema>;
 export type ListUsersOutput = Paginated<OutputUser>;
 
-export type UserControllerOutput = CreateUserOutput | ListUsersOutput;
+export const GetUserSchema = z.object({
+  id: z.uuid("ID inválido"),
+});
+
+export type GetUserInput = z.infer<typeof GetUserSchema>;
+export type GetUserOutput = OutputUser;
+
+export type UserControllerOutput =
+  | CreateUserOutput
+  | ListUsersOutput
+  | GetUserOutput;

@@ -2,6 +2,10 @@ import { BaseEntity, BaseProps } from "@src/core/entity";
 import { Role } from "./role.entity";
 import { OutputUser } from "@src/use-cases/user/dtos";
 import { UserCreateInput } from "generated/prisma/models";
+import {
+  User as PrismaUser,
+  Role as PrismaRole,
+} from "generated/prisma/client";
 
 export interface UserProps extends BaseProps {
   name: string;
@@ -32,6 +36,23 @@ export class User extends BaseEntity {
     this.active = props.active ?? true;
     this.roleId = props.roleId;
     this.role = props.role;
+  }
+
+  public static fromPrisma(user: PrismaUser & { role: PrismaRole }): User {
+    const role = Role.fromPrisma(user.role);
+
+    return new User({
+      id: user.id,
+      name: user.name,
+      username: user.username,
+      email: user.email ?? null,
+      password: user.password,
+      active: user.active ?? true,
+      roleId: user.roleId,
+      role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
   }
 
   deactivate() {

@@ -1,5 +1,3 @@
-import { User } from "@src/entities/user.entity";
-import { Role as RoleEntity } from "@src/entities/role.entity";
 import { AbstractUseCase } from "@src/core/use-case";
 import { Either, right } from "@src/util/either";
 import { ListUsersInput, ListUsersOutput, ListUsersSchema } from "../dtos";
@@ -7,10 +5,8 @@ import { ZodType } from "zod";
 import { DefaultFailOutput } from "@src/types/errors";
 import { prisma } from "@src/database";
 import { paginate } from "@src/util/pagination";
-import {
-  User as PrismaUser,
-  Role as PrismaRole,
-} from "generated/prisma/client";
+import { User, Role } from "generated/prisma/client";
+import { User as UserEntity } from "@src/entities/user.entity";
 
 type Input = ListUsersInput;
 type FailOutput = DefaultFailOutput;
@@ -38,7 +34,7 @@ export class ListUsersUseCase extends AbstractUseCase<
       data: users,
       total,
       totalPages,
-    } = await paginate<PrismaUser & { role: PrismaRole }>(
+    } = await paginate<User & { role: Role }>(
       prisma.user,
       filters,
       page,
@@ -48,7 +44,7 @@ export class ListUsersUseCase extends AbstractUseCase<
       },
     );
 
-    const domainUsers = users.map((user) => this.mapPrismaToDomain(user));
+    const domainUsers = users.map((user) => UserEntity.fromPrisma(user));
 
     return right({
       data: domainUsers.map((u) => u.toOutput()),
@@ -58,29 +54,6 @@ export class ListUsersUseCase extends AbstractUseCase<
         total,
         totalPages,
       },
-    });
-  }
-
-  private mapPrismaToDomain(user: PrismaUser & { role: PrismaRole }): User {
-    const role = new RoleEntity({
-      id: user.role.id,
-      name: user.role.name,
-      description: user.role.description ?? null,
-      createdAt: user.role.createdAt,
-      updatedAt: user.role.updatedAt,
-    });
-
-    return new User({
-      id: user.id,
-      name: user.name,
-      username: user.username,
-      email: user.email ?? null,
-      password: user.password,
-      active: user.active ?? true,
-      roleId: user.roleId,
-      role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
     });
   }
 }
