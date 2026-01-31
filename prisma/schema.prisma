@@ -162,7 +162,7 @@ model User {
   username String  @unique
   email    String?  @unique
   password String
-  isActive Boolean @default(true)
+  active   Boolean @default(true)
 
   roleId String
   role   Role   @relation(fields: [roleId], references: [id])

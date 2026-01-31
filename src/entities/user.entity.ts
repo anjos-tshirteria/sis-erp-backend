@@ -6,7 +6,7 @@ import { UserCreateInput } from "generated/prisma/models";
 export interface UserProps extends BaseProps {
   name: string;
   username: string;
-  email: string;
+  email?: string | null;
   password: string;
   active?: boolean;
   roleId: string;
@@ -16,7 +16,7 @@ export interface UserProps extends BaseProps {
 export class User extends BaseEntity {
   public name: string;
   public username: string;
-  public email: string;
+  public email: string | null;
   public password: string;
   public active: boolean;
 
@@ -27,7 +27,7 @@ export class User extends BaseEntity {
     super(props);
     this.name = props.name;
     this.username = props.username;
-    this.email = props.email;
+    this.email = props.email ?? null;
     this.password = props.password;
     this.active = props.active ?? true;
     this.roleId = props.roleId;
