@@ -10,6 +10,7 @@ const config: Config = {
     {
       "@src/*": ["src/*"],
       "test/*": ["test/*"],
+      "generated/*": ["generated/*"],
     },
     {
       prefix: "<rootDir>/",

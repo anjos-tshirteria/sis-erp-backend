@@ -1,17 +1,17 @@
 import { BaseEntity, BaseProps } from "@src/core/entity";
-import { RolePermission } from "./role-permission.entity";
+import { PermissionCode } from "generated/prisma/enums";
 import { Role as PrismaRole } from "generated/prisma/client";
 
 export interface RoleProps extends BaseProps {
   name: string;
   description?: string | null;
-  permissions?: RolePermission[];
+  permissions?: PermissionCode[];
 }
 
 export class Role extends BaseEntity {
   public name: string;
   public description?: string | null;
-  public permissions: RolePermission[];
+  public permissions: PermissionCode[];
 
   constructor(props: RoleProps) {
     super(props);
@@ -25,12 +25,13 @@ export class Role extends BaseEntity {
       id: role.id,
       name: role.name,
       description: role.description ?? null,
+      permissions: role.permissions ?? [],
       createdAt: role.createdAt,
       updatedAt: role.updatedAt,
     });
   }
 
-  addPermission(permission: RolePermission) {
+  addPermission(permission: PermissionCode) {
     this.permissions.push(permission);
     this.updatedAt = new Date();
   }
