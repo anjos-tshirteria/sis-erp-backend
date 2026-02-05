@@ -8,7 +8,7 @@ export class InputValidationError extends BaseBusinessError {
   public readonly formatted: Record<string, string[]>;
 
   constructor(error: ZodError) {
-    super("Um ou mais dados de entrada são inválidos.");
+    super("One or more of the input data is invalid.");
     this.name = "InputValidationError";
     this.issues = error.issues;
     this.formatted = InputValidationError.formatIssues(error);
