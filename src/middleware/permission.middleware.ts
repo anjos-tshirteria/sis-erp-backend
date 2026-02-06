@@ -68,7 +68,7 @@ export function authorizeAny(...permissionsToCheck: PermissionCode[]) {
       const userId = req.user.id;
 
       if (!userId) {
-        return res.status(401).json({ message: "User not authenticated" });
+        return res.status(401).json();
       }
 
       const user = await prisma.user.findUnique({
@@ -86,7 +86,7 @@ export function authorizeAny(...permissionsToCheck: PermissionCode[]) {
       });
 
       if (!user || !user.role) {
-        return res.status(403).json({ message: "User role not found" });
+        return res.status(403).json();
       }
 
       const rolePermissions = user.role.permissions || [];
