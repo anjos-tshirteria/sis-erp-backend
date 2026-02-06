@@ -10,6 +10,8 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://siserp_user:siserp_password@db:5432/siserp"
 
     services:
       db:
