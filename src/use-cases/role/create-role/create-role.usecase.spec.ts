@@ -41,6 +41,7 @@ describe("CreateRoleUseCase", () => {
     ];
     it.each<InvalidCase>([
       ["name", ""],
+      // eslint-disable-next-line
       ["permissions", ["INVALID_PERMISSION"] as any],
     ])(
       "returns InputValidationError when %s is invalid",

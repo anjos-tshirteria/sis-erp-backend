@@ -80,6 +80,7 @@ describe("UpdateRoleUseCase", () => {
         "invalid permission",
         {
           id: "13da8489-8f88-41e2-8348-8663daecf1fb",
+          // eslint-disable-next-line
           permissions: ["INVALID"] as any,
         },
       ],

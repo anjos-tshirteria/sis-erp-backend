@@ -1,6 +1,7 @@
 // eslint-disable-next-line
 export function autoParseFilters<T extends Record<string, any>>(
   filters: T,
+  // eslint-disable-next-line
 ): Record<string, any> {
   // eslint-disable-next-line
   const parsed: Record<string, any> = {};

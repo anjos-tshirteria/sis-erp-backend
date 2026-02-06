@@ -1,7 +1,9 @@
 import { autoParseFilters } from "./prisma/parse-filters";
 
 export async function paginate<T>(
+  // eslint-disable-next-line
   model: { findMany: Function; count: Function },
+  // eslint-disable-next-line
   filters: any,
   page = 1,
   limit = 10,

@@ -6,6 +6,7 @@ import { DefaultFailOutput } from "@src/types/errors";
 import { prisma } from "@src/database";
 import { paginate } from "@src/util/pagination";
 import { Role } from "@src/entities/role.entity";
+import { Role as PrismaRole } from "generated/prisma/client";
 
 type Input = ListRolesInput;
 type FailOutput = DefaultFailOutput;
@@ -29,9 +30,9 @@ export class ListRolesUseCase extends AbstractUseCase<
       data: roles,
       total,
       totalPages,
-    } = await paginate(prisma.role, filters, page, limit);
+    } = await paginate<PrismaRole>(prisma.role, filters, page, limit);
 
-    const mapped = roles.map((r: any) => {
+    const mapped = roles.map((r: PrismaRole) => {
       return Role.fromPrisma(r);
     });
 

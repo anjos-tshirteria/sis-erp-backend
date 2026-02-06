@@ -60,6 +60,7 @@ describe("RefreshTokenUseCase", () => {
     });
 
     it("returns InputValidationError when refreshToken is not a string", async () => {
+      // eslint-disable-next-line
       const invalidInput = { refreshToken: 123 } as any;
 
       const result = await usecase.run(invalidInput);
@@ -70,6 +71,7 @@ describe("RefreshTokenUseCase", () => {
     });
 
     it("returns InputValidationError when refreshToken is null", async () => {
+      // eslint-disable-next-line
       const invalidInput = { refreshToken: null } as any;
 
       const result = await usecase.run(invalidInput);
@@ -79,6 +81,7 @@ describe("RefreshTokenUseCase", () => {
     });
 
     it("returns InputValidationError when refreshToken is an object", async () => {
+      // eslint-disable-next-line
       const invalidInput = { refreshToken: { token: "test" } } as any;
 
       const result = await usecase.run(invalidInput);
@@ -246,6 +249,7 @@ describe("RefreshTokenUseCase", () => {
         ...mockTokenPayload,
         extra: "data",
         timestamp: Date.now(),
+        // eslint-disable-next-line
       } as TokenPayload & Record<string, any>;
 
       mockedJWT.verifyToken.mockReturnValue(payloadWithExtras);
@@ -372,6 +376,7 @@ describe("RefreshTokenUseCase", () => {
       const result = await usecase.run(input);
 
       expect(result.isRight()).toBe(true);
+      // eslint-disable-next-line
       const value = result.value as any;
       expect("accessToken" in value).toBe(true);
       expect("refreshToken" in value).toBe(true);
@@ -385,6 +390,7 @@ describe("RefreshTokenUseCase", () => {
       const result = await usecase.run(input);
 
       expect(result.isRight()).toBe(true);
+      // eslint-disable-next-line
       const value = result.value as any;
       expect(value.accessToken).toBe(newAccessToken);
     });
@@ -397,6 +403,7 @@ describe("RefreshTokenUseCase", () => {
       const result = await usecase.run({ refreshToken: originalToken });
 
       expect(result.isRight()).toBe(true);
+      // eslint-disable-next-line
       const value = result.value as any;
       expect(value.refreshToken).toBe(originalToken);
     });
@@ -409,6 +416,7 @@ describe("RefreshTokenUseCase", () => {
       const result = await usecase.run(originalInput);
 
       expect(originalInput.refreshToken).toBe("untouched_token");
+      // eslint-disable-next-line
       const value = result.value as any;
       expect(value.refreshToken).toBe("untouched_token");
     });
@@ -448,6 +456,7 @@ describe("RefreshTokenUseCase", () => {
       });
 
       expect(result2.isRight()).toBe(true);
+      // eslint-disable-next-line
       const value2 = result2.value as any;
       expect(value2.refreshToken).toBe("refresh_token_1");
       expect(value2.accessToken).toBe("access_token_2");

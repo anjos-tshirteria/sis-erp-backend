@@ -103,6 +103,7 @@ describe("LoginUseCase", () => {
 
     it("returns InputValidationError when username is missing", async () => {
       const invalidInput = { ...input };
+      // eslint-disable-next-line
       delete (invalidInput as any).username;
 
       const result = await usecase.run(invalidInput);
@@ -161,6 +162,7 @@ describe("LoginUseCase", () => {
 
     it("returns InputValidationError when password is missing", async () => {
       const invalidInput = { ...input };
+      // eslint-disable-next-line
       delete (invalidInput as any).password;
 
       const result = await usecase.run(invalidInput);
@@ -436,6 +438,7 @@ describe("LoginUseCase", () => {
         accessToken: "unique_access_token_xyz",
         refreshToken: "unique_refresh_token_abc",
       });
+      // eslint-disable-next-line
       const value = result.value as any;
       expect(value.accessToken).not.toBe(value.refreshToken);
     });
