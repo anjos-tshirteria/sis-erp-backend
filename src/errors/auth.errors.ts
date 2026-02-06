@@ -1,6 +1,6 @@
 import { BaseBusinessError } from "./base-business.error";
 
-export class EmailOrPasswordWrongError extends BaseBusinessError {
+export class UsernameOrPasswordWrongError extends BaseBusinessError {
   constructor() {
     super("Wrong username or password");
   }

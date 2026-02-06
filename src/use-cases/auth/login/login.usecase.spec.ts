@@ -26,7 +26,7 @@ import PasswordUtil from "@src/util/password";
 import JWT from "@src/util/jwt";
 import { LoginUseCase } from "./login.usecase";
 import { LoginUseCaseInput } from "../dtos";
-import { EmailOrPasswordWrongError } from "@src/errors/auth.errors";
+import { UsernameOrPasswordWrongError } from "@src/errors/auth.errors";
 import { InputValidationError } from "@src/errors/input-validation.error";
 
 type PrismaMock = {
@@ -95,9 +95,9 @@ describe("LoginUseCase", () => {
       const result = await usecase.run(invalidInput);
 
       expect(result.isWrong()).toBe(true);
-      expect(result.value).toBeInstanceOf(EmailOrPasswordWrongError);
+      expect(result.value).toBeInstanceOf(UsernameOrPasswordWrongError);
       expect(mockedPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: "" },
+        where: { username: "" },
       });
     });
 
@@ -174,15 +174,15 @@ describe("LoginUseCase", () => {
   });
 
   describe("User Not Found", () => {
-    it("returns EmailOrPasswordWrongError when user does not exist", async () => {
+    it("returns UsernameOrPasswordWrongError when user does not exist", async () => {
       mockedPrisma.user.findFirst.mockResolvedValue(null);
 
       const result = await usecase.run(input);
 
       expect(result.isWrong()).toBe(true);
-      expect(result.value).toBeInstanceOf(EmailOrPasswordWrongError);
+      expect(result.value).toBeInstanceOf(UsernameOrPasswordWrongError);
       expect(mockedPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: input.username },
+        where: { username: input.username },
       });
       expect(mockedPasswordUtil.comparePasswords).not.toHaveBeenCalled();
       expect(mockedJWT.signToken).not.toHaveBeenCalled();
@@ -198,14 +198,14 @@ describe("LoginUseCase", () => {
   });
 
   describe("Password Validation", () => {
-    it("returns EmailOrPasswordWrongError when password is incorrect", async () => {
+    it("returns UsernameOrPasswordWrongError when password is incorrect", async () => {
       mockedPrisma.user.findFirst.mockResolvedValue(mockUser);
       mockedPasswordUtil.comparePasswords.mockResolvedValue(false);
 
       const result = await usecase.run(input);
 
       expect(result.isWrong()).toBe(true);
-      expect(result.value).toBeInstanceOf(EmailOrPasswordWrongError);
+      expect(result.value).toBeInstanceOf(UsernameOrPasswordWrongError);
       expect(mockedPasswordUtil.comparePasswords).toHaveBeenCalledWith(
         input.password,
         mockUser.password,
@@ -287,7 +287,7 @@ describe("LoginUseCase", () => {
       await usecase.run(input);
 
       expect(mockedPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: input.username },
+        where: { username: input.username },
       });
     });
 
@@ -334,25 +334,6 @@ describe("LoginUseCase", () => {
   });
 
   describe("Edge Cases", () => {
-    it("handles user with special characters in email", async () => {
-      const specialEmailInput = {
-        ...input,
-        username: "user+test@example.co.uk",
-      };
-      mockedPrisma.user.findFirst.mockResolvedValue(mockUser);
-      mockedPasswordUtil.comparePasswords.mockResolvedValue(true);
-      mockedJWT.signToken
-        .mockReturnValueOnce("access_token_123")
-        .mockReturnValueOnce("refresh_token_456");
-
-      const result = await usecase.run(specialEmailInput);
-
-      expect(result.isRight()).toBe(true);
-      expect(mockedPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: "user+test@example.co.uk" },
-      });
-    });
-
     it("returns error when database query fails", async () => {
       mockedPrisma.user.findFirst.mockRejectedValue(
         new Error("Database connection error"),
@@ -394,21 +375,6 @@ describe("LoginUseCase", () => {
       const result = await usecase.run(longPasswordInput);
 
       expect(result.isWrong()).toBe(true);
-    });
-
-    it("is case-sensitive for email lookup", async () => {
-      mockedPrisma.user.findFirst.mockResolvedValue(mockUser);
-      mockedPasswordUtil.comparePasswords.mockResolvedValue(true);
-      mockedJWT.signToken
-        .mockReturnValueOnce("access_token_123")
-        .mockReturnValueOnce("refresh_token_456");
-
-      const uppercaseInput = { ...input, username: "USER@EXAMPLE.COM" };
-      await usecase.run(uppercaseInput);
-
-      expect(mockedPrisma.user.findFirst).toHaveBeenCalledWith({
-        where: { email: "USER@EXAMPLE.COM" },
-      });
     });
   });
 

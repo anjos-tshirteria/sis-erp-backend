@@ -10,7 +10,7 @@ import PasswordUtil from "@src/util/password";
 import JWT from "@src/util/jwt";
 import { ZodType } from "zod";
 import { prisma } from "@src/database";
-import { EmailOrPasswordWrongError } from "@src/errors/auth.errors";
+import { UsernameOrPasswordWrongError } from "@src/errors/auth.errors";
 
 type Input = LoginUseCaseInput;
 type FailOutput = DefaultFailOutput;
@@ -37,7 +37,7 @@ export class LoginUseCase extends AbstractUseCase<
     });
 
     if (!user) {
-      return wrong(new EmailOrPasswordWrongError());
+      return wrong(new UsernameOrPasswordWrongError());
     }
 
     const passwordCheck = await PasswordUtil.comparePasswords(
@@ -46,7 +46,7 @@ export class LoginUseCase extends AbstractUseCase<
     );
 
     if (!passwordCheck) {
-      return wrong(new EmailOrPasswordWrongError());
+      return wrong(new UsernameOrPasswordWrongError());
     }
 
     const { id: userId, roleId } = user;

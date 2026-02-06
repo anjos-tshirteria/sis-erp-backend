@@ -6,7 +6,7 @@ import { right, wrong } from "@src/util/either";
 import { InputValidationError } from "@src/errors/input-validation.error";
 import { ZodError } from "zod";
 import {
-  EmailOrPasswordWrongError,
+  UsernameOrPasswordWrongError,
   InvalidRefreshTokenError,
 } from "@src/errors/auth.errors";
 
@@ -68,8 +68,8 @@ describe("AuthController", () => {
       expect(statusMock).toHaveBeenCalledWith(400);
     });
 
-    it("should return 401 if login fails with EmailOrPasswordWrongError", async () => {
-      const error = new EmailOrPasswordWrongError();
+    it("should return 401 if login fails with UsernameOrPasswordWrongError", async () => {
+      const error = new UsernameOrPasswordWrongError();
       (loginUseCase.run as jest.Mock).mockResolvedValueOnce(wrong(error));
 
       const sendMock = jest.fn();

@@ -1,5 +1,5 @@
 import {
-  EmailOrPasswordWrongError,
+  UsernameOrPasswordWrongError,
   InvalidRefreshTokenError,
 } from "@src/errors/auth.errors";
 import { AlreadyExistsError, NotFoundError } from "@src/errors/generic.errors";
@@ -137,7 +137,7 @@ export abstract class AbstractController<L extends Error, A> {
       [InputValidationError, this.badRequest.bind(this)],
       [NotFoundError, this.notFound.bind(this)],
       [AlreadyExistsError, this.conflict.bind(this)],
-      [EmailOrPasswordWrongError, this.unauthorized.bind(this)],
+      [UsernameOrPasswordWrongError, this.unauthorized.bind(this)],
       [InvalidRefreshTokenError, this.unauthorized.bind(this)],
     ]);
   }
