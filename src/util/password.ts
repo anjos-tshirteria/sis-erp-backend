@@ -39,25 +39,25 @@ export default class PasswordUtil {
     const letterRegex = /[A-Za-z]/;
 
     if (!password || password.length < minPasswordLength) {
-      return `A senha deve ter no mínimo ${minPasswordLength} caracteres`;
+      return `Password must have at least ${minPasswordLength} characters`;
     }
 
     password = removeAccents(password);
 
     if (!letterRegex.test(password)) {
-      return "A senha deve possuir ao menos uma letra";
+      return "Password must contain at least one letter";
     }
 
     if (!uppercaseLetterRegex.test(password)) {
-      return "A senha deve possuir ao menos uma letra maiúscula";
+      return "Password must contain at least one uppercase letter";
     }
 
     if (!numberRegex.test(password)) {
-      return "A senha deve possuir ao menos um número";
+      return "Password must contain at least one number";
     }
 
     if (!symbolsRegex.test(password)) {
-      return `A senha deve possuir ao menos um símbolo. Ex.: ${validSymbols.join(", ")}`;
+      return `Password must contain at least one special character. Ex.: ${validSymbols.join(", ")}`;
     }
 
     return;

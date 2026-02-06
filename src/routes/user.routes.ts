@@ -1,8 +1,14 @@
 import { makeUserController } from "@src/factories/user.factory";
+import { authMiddleware } from "@src/middleware/auth.middleware";
+import { authorize } from "@src/middleware/permission.middleware";
 import { Router } from "express";
+import { PermissionCode } from "generated/prisma/enums";
 
 const userRouter = Router();
 const userController = makeUserController();
+
+userRouter.use(authMiddleware);
+userRouter.use(authorize(PermissionCode.MANAGE_USERS));
 
 userRouter
   .post("/", userController.create.bind(userController))
