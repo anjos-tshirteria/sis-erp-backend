@@ -5,7 +5,7 @@ export class UnknownError extends Error {
         ? error.message
         : typeof error === "string"
           ? error
-          : "Erro desconhecido no servidor!",
+          : "Unknown error on the server!",
     );
     this.name = this.constructor.name;
     Error.captureStackTrace(this, this.constructor);

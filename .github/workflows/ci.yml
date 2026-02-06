@@ -10,6 +10,8 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "postgresql://siserp_user:siserp_password@localhost:5432/siserp_test"
 
     services:
       db:
@@ -33,16 +35,17 @@ jobs:
       - name: Create .env
         run: cp .env.example .env
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.21.0
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 24
           cache: "pnpm"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -67,16 +70,17 @@ jobs:
       - name: Create .env
         run: cp .env.example .env
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.21.0
+          run_install: false
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 24
           cache: "pnpm"
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
