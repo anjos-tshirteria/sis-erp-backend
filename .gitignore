@@ -8,3 +8,6 @@ coverage
 
 .pnpm-store
 /generated/prisma
+
+# TODO: REMOVE BEFORE PRODUCTION
+/prisma/migrations

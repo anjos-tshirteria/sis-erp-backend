@@ -1,3 +1,8 @@
+import {
+  UsernameOrPasswordWrongError,
+  InvalidRefreshTokenError,
+} from "@src/errors/auth.errors";
+import { AlreadyExistsError, NotFoundError } from "@src/errors/generic.errors";
 import { InputValidationError } from "@src/errors/input-validation.error";
 import { Right, Wrong } from "@src/util/either";
 import { sendError } from "@src/util/http";
@@ -127,7 +132,14 @@ export abstract class AbstractController<L extends Error, A> {
     Function,
     (req: Request, res: Response, result: L | Wrong<L, A>) => L
   > {
-    return new Map([[InputValidationError, this.badRequest.bind(this)]]);
+    // @ts-expect-error InputValidationError has some additional methods
+    return new Map([
+      [InputValidationError, this.badRequest.bind(this)],
+      [NotFoundError, this.notFound.bind(this)],
+      [AlreadyExistsError, this.conflict.bind(this)],
+      [UsernameOrPasswordWrongError, this.unauthorized.bind(this)],
+      [InvalidRefreshTokenError, this.unauthorized.bind(this)],
+    ]);
   }
 
   protected handleError(
