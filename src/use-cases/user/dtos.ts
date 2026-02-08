@@ -47,7 +47,7 @@ export const UpdateUserSchema = z.object({
   id: z.uuid("ID inválido"),
   name: z.string().min(1).optional(),
   username: z.string().min(1).optional(),
-  email: z.email().optional(),
+  email: z.email().optional().nullable(),
   active: z.boolean().optional(),
   roleId: z.uuid().optional(),
 });
